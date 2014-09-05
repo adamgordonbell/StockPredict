@@ -1,0 +1,18 @@
+name:           FPProject
+version:        0.1
+cabal-version:  >=1.2
+build-type:     Simple
+author:         adam
+
+executable FPProject
+  hs-source-dirs:  src
+  main-is:         Main.hs
+  build-depends:   
+                   base >= 4,
+                   transformers >=0.3.0 && <0.4,
+                   persistent,
+                   persistent-sqlite,
+                   persistent-template
+  ghc-options:     -Wall -ddump-splices
+  extensions:     EmptyDataDecls, FlexibleContexts, GADTs,OverloadedStrings, QuasiQuotes, TemplateHaskell,TypeFamilies
+
