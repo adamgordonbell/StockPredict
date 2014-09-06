@@ -25,8 +25,11 @@ data Action = Buy | Sell | Stay deriving (Show, Enum, Read)
 data Symbol = Symbol String deriving (Show,Read)
 
 predict :: Symbol -> Action
-predict _ = Buy
+predict _ = predict1 3.0 [2.1,2.3,2.4]
 
-
+predict1 :: Float -> [Float] -> Action
+predict1 currentPrice previousPrice 
+    | (last $ movavg 3 previousPrice) > currentPrice = Buy
+    | otherwise = Sell
 
 --  http://ichart.finance.yahoo.com/table.csv?s=YHOO
