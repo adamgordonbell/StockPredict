@@ -1,0 +1,17 @@
+module-template: ! 'module MODULE_NAME where
+
+'
+extensions:
+  TemplateHaskell: true
+  OverloadedStrings: true
+  GADTs: true
+  EmptyDataDecls: true
+  QuasiQuotes: true
+  TypeFamilies: true
+  FlexibleContexts: true
+environment: default
+cabal-file: project.cabal
+version: 1
+ghc-args: []
+excluded-modules:
+- Setup.hs
