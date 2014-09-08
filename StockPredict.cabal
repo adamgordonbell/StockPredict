@@ -12,7 +12,8 @@ executable FPProject
                    transformers >=0.3.0 && <0.4,
                    persistent,
                    persistent-sqlite,
-                   persistent-template
+                   persistent-template,
+                   datetime
   ghc-options:     -Wall -ddump-splices
   extensions:     EmptyDataDecls, FlexibleContexts, GADTs,OverloadedStrings, QuasiQuotes, TemplateHaskell,TypeFamilies
 
