@@ -7,13 +7,22 @@ author:         adam
 executable FPProject
   hs-source-dirs:  src
   main-is:         Main.hs
-  build-depends:   
+  build-depends:
                    base >= 4,
                    transformers >=0.3.0 && <0.4,
                    persistent,
                    persistent-sqlite,
                    persistent-template,
-                   datetime
+                   datetime,
+                   text,
+                   bytestring,
+                   syb,
+                   time,
+                   vector,
+                   attoparsec,
+                   conduit,
+                   conduit-extra,
+                   http-conduit,
+                   cassava
   ghc-options:     -Wall -ddump-splices
   extensions:     EmptyDataDecls, FlexibleContexts, GADTs,OverloadedStrings, QuasiQuotes, TemplateHaskell,TypeFamilies
-
