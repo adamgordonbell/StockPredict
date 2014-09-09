@@ -1,44 +1,53 @@
 {-# LANGUAGE RankNTypes #-}
 module Main where
 
-import           Control.Applicative    (Applicative, pure, (<$>), (<*), (<*>),
-                                         (<|>))
-import           Control.Monad.IO.Class (liftIO)
-import           Types
-
-import qualified Data.ByteString.Lazy   as BL (readFile)
-import           Data.Conduit.Binary    (sinkFile)
-import           Data.Csv               (decodeByName)
+import           Control.Applicative        (Applicative, pure, (<$>), (<*),
+                                             (<*>), (<|>))
+import qualified Data.ByteString.Lazy       as BL
+import qualified Data.ByteString.Lazy.Char8 as BL8
 import           Data.Csv
-import qualified Data.Vector            as V
-import           Network.HTTP.Conduit   (simpleHttp)
+import qualified Data.Vector                as V
+import           Network.HTTP.Conduit       (simpleHttp)
+import           Types
 
 main :: IO ()
 main = do
-        print "Enter Stock Symbol: (ie. YHOO)"
+        putStrLn "Dumb Stock Predictor."
+        putStrLn "Grab Historical data and current price on stock from yahoo finance and Buy or sell based on a moving average of close prices"
+        putStrLn "Enter Stock Symbol: (ie. YHOO)"
         s <- getLine
-        rs <- getData1 s
-        V.forM_ rs  $ \ r ->
-            putStrLn $  show (date r) ++ ": " ++ show (date r)
+        rs <- getHistoricalData s
+        c <- getCurrentData s
+        print $ "Current Price: " ++ (show c)
+        print $ "Last 3 close prices: " ++ (show $ take1 3 rs)
+        print $ predict c (take1 3 rs)
+  where
+        take1 x rs = fmap close . V.toList $ V.take x rs
 
-movavg n []     = []
+getHistoricalData :: String -> IO (V.Vector HistoricalRow)
+getHistoricalData stock = do
+    csvData <- simpleHttp  $ "http://ichart.finance.yahoo.com/table.csv?s=" ++ stock
+    let row = decodeByName csvData
+    return $ unwrap row
+
+getCurrentData :: String -> IO Double
+getCurrentData stock = do
+    csvData <- simpleHttp $ "http://download.finance.yahoo.com/d/quotes.csv?f=l1&e=.csv&s=" ++ stock
+    return . read $ BL8.unpack csvData
+
+predict :: Double -> [Double] -> Action
+predict currentPrice previousPrice
+    | last (movavg 3 previousPrice) > currentPrice = Buy
+    | otherwise = Sell
+
+movavg :: Int -> [Double] -> [Double]
+movavg _ []     = []
 movavg n (x:xs) = map (/ n') sums
     where
         sums = scanl (+) (n' * x) $ zipWith (-) xs (replicate n x ++ xs)
         n'   = fromIntegral n
 
-predict :: String -> Action
-predict _ = predict1 3.0 [2.1,2.3,2.4]
-
-predict1 :: Float -> [Float] -> Action
-predict1 currentPrice previousPrice
-    | last (movavg 3 previousPrice) > currentPrice = Buy
-    | otherwise = Sell
-
-getData1 :: String -> IO (V.Vector Row)
-getData1 stock = do
-    csvData <- simpleHttp  $ "http://ichart.finance.yahoo.com/table.csv?s=" ++ stock
-    let row = decodeByName csvData
-    case row of
-      Left _ -> return $ V.empty
-      Right (_, v) -> return v
+unwrap :: Either t (t1, V.Vector a) -> V.Vector a
+unwrap r = case r of
+      Left _ ->  V.empty
+      Right (_, v) ->  v

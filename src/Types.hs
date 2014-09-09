@@ -24,7 +24,7 @@ data Action = Buy | Sell | Stay deriving (Show, Enum, Read)
 
 data Symbol = Symbol String deriving (Show,Read)
 
-data Row = Row
+data HistoricalRow = HistoricalRow
     { date    :: !Day
     , open    :: !Double
     , high    :: !Double
@@ -32,10 +32,10 @@ data Row = Row
     , close   :: !Double
     , volume  :: !Int
     ,adjClose :: !Double
-    }
+    } deriving (Show, Eq)
 
-instance FromNamedRecord Row where
-    parseNamedRecord r = Row <$>
+instance FromNamedRecord HistoricalRow where
+    parseNamedRecord r = HistoricalRow <$>
                              r .: "Date" <*>
                              r .: "Open" <*>
                              r .: "High" <*>
@@ -70,6 +70,3 @@ typeError typ s mmsg =
     cause = case mmsg of
         Just msg -> " (" ++ msg ++ ")"
         Nothing  -> ""
-
--- Date,Open,High,Low,Close,Volume,Adj Close
--- 2014-09-05,39.05,39.80,39.05,39.59,25808300,39.59
