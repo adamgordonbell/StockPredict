@@ -23,6 +23,8 @@ executable FPProject
                    conduit,
                    conduit-extra,
                    http-conduit,
-                   cassava
+                   cassava,
+                   statistics-linreg,
+                   hmatrix
   ghc-options:     -Wall -ddump-splices
   extensions:     EmptyDataDecls, FlexibleContexts, GADTs,OverloadedStrings, QuasiQuotes, TemplateHaskell,TypeFamilies

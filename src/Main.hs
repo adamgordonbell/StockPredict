@@ -1,13 +1,14 @@
 {-# LANGUAGE RankNTypes #-}
 module Main where
 
-import           Control.Applicative        (Applicative, pure, (<$>), (<*),
-                                             (<*>), (<|>))
-import qualified Data.ByteString.Lazy       as BL
-import qualified Data.ByteString.Lazy.Char8 as BL8
+import           Control.Applicative         (Applicative, pure, (<$>), (<*),
+                                              (<*>), (<|>))
+import qualified Data.ByteString.Lazy        as BL
+import qualified Data.ByteString.Lazy.Char8  as BL8
 import           Data.Csv
-import qualified Data.Vector                as V
-import           Network.HTTP.Conduit       (simpleHttp)
+import qualified Data.Vector                 as V
+import           Network.HTTP.Conduit        (simpleHttp)
+import           Statistics.LinearRegression
 import           Types
 
 main :: IO ()
