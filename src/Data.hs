@@ -5,6 +5,8 @@ import           Database.Persist
 import           Database.Persist.Sqlite
 import           Database.Persist.TH
 
+-- TODO persist stock data, and possibly back fill with some stock market indictors to try to derive correlations baed on
+
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
 Person
     name String
@@ -34,5 +36,3 @@ initDB =  runSqlite ":memory:" $ do
 
     delete janeId
     deleteWhere [BlogPostAuthorId ==. johnId]
-
-
